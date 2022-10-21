@@ -1,39 +1,32 @@
-﻿// See https://aka.ms/new-console-template for more information
-using ToyRobot;
+﻿(int x, int y, Direction direction) ParseCommandToPlace(string[] command1)
+{
+    var strings = command1[1].Split(",");
+    var x = strings[0];
+    var y  = strings[1];
+    var direction = Enum.Parse<Direction>(strings[2]);
+    return (int.Parse(x), int.Parse(y), direction);
+}
 
-Game game = new Game(new ToyRobot.Models.Robot(), new ToyRobot.Models.Table(), new Report());
-game.Help();
-
-Console.Write("Please enter a command to begin \n");
+var robot = new Robot();
 while (true)
 {
-    try
-    { 
-        var line = Console.ReadLine().Split(' ');
-
-        if (!game.IsRobotOnTable())
-        {
-            switch (line[0].ToUpper())
-            {
-                case "PLACE": game.PlaceRobot(line); break;
-                default: Console.WriteLine("Sorry I didn't understand, please try again"); break;
-            }
-        } else
-        {
-            switch(line[0].ToUpper())
-            {
-                case "REPORT": Console.WriteLine($"Output: {game.ReportRobotLocation()}"); break;
-                case "MOVE": game.MoveRobot(); break;
-                case "LEFT": game.TurnRobotLeft(); break;
-                case "RIGHT": game.TurnRobotRight(); break;
-                case "HELP": game.Help(); break;
-                default: Console.WriteLine("Sorry I didn't understand, please try again"); break;
-            }
-        }
-        Console.Write("What move would you like to try next \n");
-    }
-    catch (Exception e)
+    var command = Console.ReadLine().Split(" ");
+    switch (command[0])
     {
-        Console.WriteLine("Sorry I didn't understand, please try again");
+        case "MOVE" : 
+            robot.Move();
+            break;
+        case "PLACE" :
+            var placeParameters = ParseCommandToPlace(command);
+            robot.Place(placeParameters.x,placeParameters.y, placeParameters.direction);
+            break;
+        case "LEFT": robot.TurnLeft();
+            break;
+        case "RIGHT": robot.TurnRight();
+            break;
+        case "REPORT" : Console.WriteLine($"Robot is at {robot.XCoordinate},{robot.YCoordinate} facing {robot.Direction}");
+            break;
+        default:Console.WriteLine("Please use valid command");
+            break;
     }
 }

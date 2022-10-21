@@ -1,6 +1,3 @@
 .vs/
-ToyRobot/obj
-ToyRobot/bin
-
-ToyRobot_Tests/obj
-ToyRobot_Tests/bin
+**/obj
+**/bin
